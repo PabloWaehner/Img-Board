@@ -5,7 +5,7 @@ const db = require("./sql/db.js");
 const multer = require("multer");
 const uidSafe = require("uid-safe");
 const path = require("path");
-const s3 = require("./s3");
+// const s3 = require("./s3");
 const config = require("./config");
 const bodyParser = require("body-parser"); //this is necessary when we work with req.body
 
@@ -19,7 +19,7 @@ const diskStorage = multer.diskStorage({
     });
   }
 });
-//
+
 const uploader = multer({
   storage: diskStorage,
   limits: {
@@ -37,11 +37,13 @@ app.use(
 app.use(bodyParser.json());
 
 app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/uploads"));
 
-app.post("/upload", handleFile, s3.upload, function(req, res) {
+app.post("/upload", handleFile, function(req, res) {
+  console.log("req.file: ", req.file);
   if (req.file) {
     db.addImage(
-      config.s3Url + req.file.filename,
+      req.file.filename,
       req.body.username,
       req.body.title,
       req.body.description
