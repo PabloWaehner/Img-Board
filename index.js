@@ -44,6 +44,7 @@ app.post("/upload", handleFile, function(req, res) {
   if (req.file) {
     db.addImage(
       req.file.filename,
+      // config.s3Url + req.file.filename,
       req.body.username,
       req.body.title,
       req.body.description
