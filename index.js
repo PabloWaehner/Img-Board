@@ -39,6 +39,10 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/uploads"));
 
+app.use("/favicon.ico", (req, res) => {
+  res.sendStatus(204);
+});
+
 app.post("/upload", handleFile, function(req, res) {
   console.log("req.file: ", req.file);
   if (req.file) {
