@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <title>ImageBoard</title>
+    <link rel="stylesheet" href="stylesheet.css">
+</head>
+<body>
+
+    <div id="main">
+
+        <div class="heading"><h1>I&ensp; &ensp; </h1><div class="red-square"></div><h1>{{ heading }}</h1></div>
+
+        <!-- <button id="show-modal" @click="showModal = true">New Post</button> -->
+
+<ul>
+    <li>Choose a file (image)</li>
+        <li>Give it a title and description, and introduce your username</li>
+        <li>Click on upload to see your image in action!</li>
+    </ul>
+        &ensp; &ensp; Title<input type="text" v-model="title">
+        &ensp; Description<input type="text" v-model="description">
+        &ensp; Username<input type="text" v-model="username">
+
+        <div>&ensp; &ensp; File: <label for="file-field">Choose file</label></div> <!-- it's not possible to style an input with type="file", that's why we use the label -->
+        <input type="file" id="file-field" @change="imageSelected"> <!-- @change, so that if more than 1 image is selected, only the last one gets uploaded -->
+        <div><button class="upload" @click="upload()">UPLOAD</button></div>
+        <h2 class="latest-images">&ensp; &ensp; {{ 'Latest images' }}</h2>
+        <!-- <a v-bind:href="url" v-bind:class="funky">{{ heading }}</a> -->
+        <div class="container" v-if="images.length > 0">
+            <div v-for="image in images">
+                <div class="delete-image">
+                    <div class="images-and-title" @click="getModal(image.id)">
+                        <img class="images" :key="image.id" :src="image.url" alt="image.title" >
+                        <h2 class="image-title">{{ image.title }}</h2>
+                    </div>
+                        <div>
+                            <button  class="delete-button" @click="deleteImage(image.id)">DELETE IMAGE</button>
+                        </div>
+                </div>
+            </div>
+            <div >
+                <button @click="moreImages()" id="moreButton">Show More</button>
+
+
+            </div>
+        </div>
+        <image-modal v-if="imageId" :key="imageId" :id="imageId" @close="closeModal"></image-modal>
+    </div>
+
+
+
+
+    <script id="id-image" type="text/x-template">
+
+        <div class="wrap"  @click="hidemodal">
+            <div class="content" @click.stop>
+                <div class="zoomed-image">
+                    <img :src="url" alt="">
+                    <h4>{{title}}</h4>
+                    <h4>{{description}}</h4>
+                    <div>uploaded by {{ username }} on {{ (new Date(created_at)).toDateString() }}</div>
+                </div>
+                <div class="comments">
+                    <h3>Add a comment!</h3>
+                    Comments: &ensp; <textarea class="spaceup" rows="10" cols="50" v-model="comment"></textarea>
+                    Username:<input class="username" v-model="username"></input>
+                    <input class="spacedown submit" type=submit @click="uploadComment"></input>
+                    <div v-if="comments.length > 0">
+                            <div class="comment">Recent comments:</div>
+                            <div id="comments" v-for="comment in comments">
+                              <div class="comment">"{{ comment.comment }}"</div>
+                              <div class="username">commented by {{ comment.username }} on {{ (new Date(comment.created_at)).toDateString() }}</div>
+                            </div>
+                          </div>
+                </div>
+
+                <div >
+                    <button class="xbutton" @click="hidemodal">X</button>
+                </div>
+            </div>
+        </div>
+    </script>
+
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
